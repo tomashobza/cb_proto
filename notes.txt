@@ -11,19 +11,18 @@ NPCs also have archetypes, these determine how they are affected by different De
 The Archetypes are:
 
 The Ladder Climber
-
 Obsessed with optics and advancement. Responds well to anything that makes them look good by association, poorly to anything that threatens their position. High sensitivity to ambitious and political tags, essentially immune to honest ones.
+
 The Mentor
-
 Genuinely invested in developing people, but has strong opinions about the right way to do things. Rewards honesty and competence signals, suspicious of political maneuvering. The one archetype where honest is always the safe play.
+
 The Bureaucrat
-
 Risk-averse, process-obsessed, deeply uncomfortable with confrontation or deviation. Rewards boss-pleasing and loyal, punishes confrontational and ambitious hard. Not malicious — just captured by the system.
+
 The Saboteur
-
 Superficially collegial, covertly competitive. Uniquely sensitive to credit-taking — mirrors it back. Warmth is decoupled from Respect almost completely; they'll smile and undermine simultaneously.
-The Burnout
 
+The Burnout
 Checked out, cynical, low energy. Low sensitivity across almost all tags — hard to move either direction. The exception is boundary tags, which they respond to with unexpected warmth. Basically a low-stakes NPC unless the player is also burning out, in which case the arc gets dark.
 
 The main storytelling unit is an Arc. An Arc has 4 stages:
