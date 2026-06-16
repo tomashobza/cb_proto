@@ -1,35 +1,3 @@
-So i'm thinking that different archetypes respond differently to different responses. It also depends on their inner state.
-
-An Arc can be defined by definining:
-- actors (select a specific NPC or any NPC with a given archetype, maybe) - defines what NPCs are going to be affected by the decisions
-- conditions (of the player state or NPC state)
-- each arc is defined by three stages (3 separate scenarios):
-  1. setup
-  2. first problem
-  3. consequence
-  4. resolution
-- each stage decision influences the following stages as well as the long-running NPC states
-- between-arc incluence is materialized only via long-running NPC states
-
-Decisions have defined tags:
-- helpful
-- ambitious
-- honest
-- political
-- boundary
-- loyal
-- confrontational
-- credit-taking
-- team-first
-- boss-pleasing
-
-It is defined beforehand how different archetypes react to different labels (how their stats change). One can continously add to this vocabulary of labels + reactions.
-
-Thanks to this design, the individual scenarios almost don't matter, what matters is the decision labels. The actual decisions matter only within the context of a single Arc.
-
-
----
-
 The player has stats:
 - reputation
 - political capital
@@ -76,6 +44,8 @@ Intra-Arc consequences can be closely modeled by the definition of Arc scenarios
 Extra-Arc consequences are handled via each decision affecting cretain NPC's stats. 
 An atomic unit of gameplay is a scenario -- given a specific context, the user is tasked to choose 1 out of 4 decisions. Each decision has different tags.
 
+Arcs have cooldowns. They have a smaller chance of being triggered the more recently it was active.
+
 Tags are the NPC and player stats primitives. A Tag is two vectors - an archetype effect (each component is a scalar of how much is an archetype affected by the tag, has direction and magnitude), vice versa for the player stats vector. 
 The Tags are:
 - helpful
@@ -88,3 +58,9 @@ The Tags are:
 - credit-taking
 - team-first
 - boss-pleasing
+
+The player has a Level (the position they're on; starts with Intern and progresses upward). To level-up, the player needs to get a promotion. A promotion is a special type of an Arc.
+
+At any time of choosing an Arc, there is a certain probability that the promotion Arc will be triggered. The promotion Arc has hard requirements (like any other Arc, specifically something like manager.warmth > 0.8), but it's probability of being picked also depends on the time spent at the current level (the longer the player is from the last promotion, the higher the probability is, but of course the hard requirements have to be met). There is also a decresing multiplier, with each gained level, the probability growth decreses.
+
+The player level also acts as a multiplier for the Decision Tag effects - a higher level means more exposure and less margin for error; it amplifies tag effect vectors in both directions, positive and negative.
