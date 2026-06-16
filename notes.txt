@@ -48,6 +48,8 @@ Each Arc is defined as:
 - actors:
   - canonical names for any NPC that fits given conditions
 
+NPCs that are actors in an Arc are locked and cannot become actors in another Arc. At any time, at most 2-3 Arcs can be active.
+
 Intra-Arc consequences can be closely modeled by the definition of Arc scenarios. Within an Arc, more complicated logic that is dependent specifically on previous same-Arc decisions -- this allows for more complex storyline flows.
 
 Extra-Arc consequences are handled via each decision affecting cretain NPC's stats. 
