@@ -36,7 +36,7 @@ class Player():
 
 if __name__ == "__main__":
   player = Player("Player")
-  npc = NPC("Ladder Climber", ArchetypesEnum.LadderClimber)
+  npc = NPC("Joe", ArchetypesEnum.LadderClimber)
   
   scenario = Scenario(
     "Your manager Marcus sends a message in #team-updates: \"Great work on the Henderson proposal everyone. Let's make sure we highlight this in the all-hands.\" You know this was 80% your work. Sarah (Ladder Climber) replies instantly: \"Thanks Marcus! Excited to present it together 🙌",
