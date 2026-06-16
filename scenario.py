@@ -15,7 +15,7 @@ class Scenario():
       raise ValueError("Decision index must be between 0 and 3")
     
     decision = self.decisions[decision_index]
-    tags = decision.get_tags()
+    tags = decision.choose()
     
     # affect NPCs based on decision tags
     for actor in self.actors:
@@ -23,3 +23,6 @@ class Scenario():
     
     # affect player based on decision tags
     self.player.affect_by_tags(tags)
+    
+    # return any data associated with the decision (e.g. for branching to different scenarios based on the decision made)
+    return decision.get_return_data()
