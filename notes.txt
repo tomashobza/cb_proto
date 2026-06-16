@@ -31,11 +31,32 @@ Thanks to this design, the individual scenarios almost don't matter, what matter
 ---
 
 The player has stats:
-- 
+- reputation
+- political capital
+- stress
 
 Each NPC has stats:
--
+- warmth
+- respect
 NPCs also have archetypes, these determine how they are affected by different Decision Tags as well as in which Arc the NPC can be an Actor (and which actor).
+
+The Archetypes are:
+
+The Ladder Climber
+
+Obsessed with optics and advancement. Responds well to anything that makes them look good by association, poorly to anything that threatens their position. High sensitivity to ambitious and political tags, essentially immune to honest ones.
+The Mentor
+
+Genuinely invested in developing people, but has strong opinions about the right way to do things. Rewards honesty and competence signals, suspicious of political maneuvering. The one archetype where honest is always the safe play.
+The Bureaucrat
+
+Risk-averse, process-obsessed, deeply uncomfortable with confrontation or deviation. Rewards boss-pleasing and loyal, punishes confrontational and ambitious hard. Not malicious — just captured by the system.
+The Saboteur
+
+Superficially collegial, covertly competitive. Uniquely sensitive to credit-taking — mirrors it back. Warmth is decoupled from Respect almost completely; they'll smile and undermine simultaneously.
+The Burnout
+
+Checked out, cynical, low energy. Low sensitivity across almost all tags — hard to move either direction. The exception is boundary tags, which they respond to with unexpected warmth. Basically a low-stakes NPC unless the player is also burning out, in which case the arc gets dark.
 
 The main storytelling unit is an Arc. An Arc has 4 stages:
 Stage 1 — Setup      : scene-setting, no decision yet. NPC initiates contact.
@@ -56,3 +77,14 @@ Extra-Arc consequences are handled via each decision affecting cretain NPC's sta
 An atomic unit of gameplay is a scenario -- given a specific context, the user is tasked to choose 1 out of 4 decisions. Each decision has different tags.
 
 Tags are the NPC and player stats primitives. A Tag is two vectors - an archetype effect (each component is a scalar of how much is an archetype affected by the tag, has direction and magnitude), vice versa for the player stats vector. 
+The Tags are:
+- helpful
+- ambitious
+- honest
+- political
+- boundary
+- loyal
+- confrontational
+- credit-taking
+- team-first
+- boss-pleasing
