@@ -1,0 +1,56 @@
+So i'm thinking that different archetypes respond differently to different responses. It also depends on their inner state.
+
+An Arc can be defined by definining:
+- actors (select a specific NPC or any NPC with a given archetype, maybe) - defines what NPCs are going to be affected by the decisions
+- conditions (of the player state or NPC state)
+- each arc is defined by three stages (3 separate scenarios):
+  1. setup
+  2. first problem
+  3. consequence
+  4. resolution
+- each stage decision influences the following stages as well as the long-running NPC states
+- between-arc incluence is materialized only via long-running NPC states
+
+Decisions have defined tags:
+- helpful
+- ambitious
+- honest
+- political
+- boundary
+- loyal
+- confrontational
+- credit-taking
+- team-first
+- boss-pleasing
+
+It is defined beforehand how different archetypes react to different labels (how their stats change). One can continously add to this vocabulary of labels + reactions.
+
+Thanks to this design, the individual scenarios almost don't matter, what matters is the decision labels. The actual decisions matter only within the context of a single Arc.
+
+
+---
+
+The player has stats:
+- 
+
+Each NPC has stats:
+-
+NPCs also have archetypes, these determine how they are affected by different Decision Tags as well as in which Arc the NPC can be an Actor (and which actor).
+
+The main storytelling unit is an Arc. An Arc has 4 stages:
+Stage 1 — Setup      : scene-setting, no decision yet. NPC initiates contact.
+Stage 2 — Dilemma    : first real decision. Tags fire, stats update.
+Stage 3 — Escalation : consequences of stage 2 manifest + a second decision.
+                        This is where it gets uncomfortable.
+Stage 4 — Aftermath  : no decision. Short resolution text that reflects
+                        cumulative choices. May emit canonical events.
+Each Arc is defined as:
+- actors:
+  - canonical names for any NPC that fits given conditions
+
+Intra-Arc consequences can be closely modeled by the definition of Arc scenarios. Within an Arc, more complicated logic that is dependent specifically on previous same-Arc decisions -- this allows for more complex storyline flows.
+
+Extra-Arc consequences are handled via each decision affecting cretain NPC's stats. 
+An atomic unit of gameplay is a scenario -- given a specific context, the user is tasked to choose 1 out of 4 decisions. Each decision has different tags.
+
+Tags are the NPC and player stats primitives. A Tag is two vectors - an archetype effect (each component is a scalar of how much is an archetype affected by the tag, has direction and magnitude), vice versa for the player stats vector. 
