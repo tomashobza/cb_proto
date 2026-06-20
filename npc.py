@@ -9,6 +9,20 @@ class NPC():
     self.archetype = archetype
     self.warmth = Stat("Warmth", 0)
     self.respect = Stat("Respect", 0)
+    self._locked_by = None
+
+  @property
+  def is_locked(self):
+    return self._locked_by is not None
+
+  def lock_for(self, owner):
+    if self._locked_by is not None and self._locked_by is not owner:
+      raise RuntimeError(f"{self.name} is already assigned to another arc")
+    self._locked_by = owner
+
+  def unlock_for(self, owner):
+    if self._locked_by is owner:
+      self._locked_by = None
   
   def affect_by_tags(self, tags: list[TagEnum]):
     affects = [self.affect_by_tag(tag) for tag in tags]
