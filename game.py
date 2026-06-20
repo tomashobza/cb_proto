@@ -4,6 +4,7 @@ from arc import ActorQuery, Arc, PlayerCondition
 from archetypes import ArchetypesEnum
 from decision import Decision
 from npc import NPC
+from org_chart import OrgRole
 from player import Player
 from scenario import Scenario
 from tags import TagEnum
@@ -11,8 +12,8 @@ from tags import TagEnum
 
 def main():
   player = Player("Player")
-  sarah = NPC("Sarah", ArchetypesEnum.LadderClimber)
-  marcus = NPC("Marcus", ArchetypesEnum.Bureaucrat)
+  sarah = NPC("Sarah", ArchetypesEnum.LadderClimber, role=OrgRole.ASSOCIATE)
+  marcus = NPC("Marcus", ArchetypesEnum.Bureaucrat, role=OrgRole.MANAGER)
 
   filler = Scenario(
     "A colleague asks whether you can review their slide deck before lunch.",
@@ -84,8 +85,14 @@ def main():
     },
     start_scenario_id="setup",
     actor_queries={
-      "manager": ActorQuery(archetypes={ArchetypesEnum.Bureaucrat}),
-      "rival": ActorQuery(archetypes={ArchetypesEnum.LadderClimber}),
+      "manager": ActorQuery(
+        archetypes={ArchetypesEnum.Bureaucrat},
+        roles={OrgRole.MANAGER},
+      ),
+      "rival": ActorQuery(
+        archetypes={ArchetypesEnum.LadderClimber},
+        role_level=(OrgRole.INTERN, OrgRole.SENIOR_ASSOCIATE),
+      ),
     },
     conditions=(PlayerCondition("reputation", ">=", 0),),
     transitions={

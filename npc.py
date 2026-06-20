@@ -2,14 +2,20 @@ import enum
 from stats import Stat
 from tags import TagEnum, NPC_AFFECT_BY_TAGS, PLAYER_AFFECT_BY_TAGS
 from archetypes import ArchetypesEnum
+from org_chart import OrgRole, normalize_role, role_level
 
 class NPC():
-  def __init__(self, name, archetype: ArchetypesEnum):
+  def __init__(self, name, archetype: ArchetypesEnum, role=OrgRole.ASSOCIATE):
     self.name = name
     self.archetype = archetype
+    self.role = normalize_role(role)
     self.warmth = Stat("Warmth", 0)
     self.respect = Stat("Respect", 0)
     self._locked_by = None
+
+  @property
+  def level(self):
+    return role_level(self.role)
 
   @property
   def is_locked(self):
@@ -47,4 +53,4 @@ class NPC():
       raise ValueError(f"Tag {tag} not found in NPC affect mapping for archetype {self.archetype}")
 
   def __str__(self):
-    return f"{self.name}\n{self.warmth}\n{self.respect}"
+    return f"{self.name}\nRole: {self.role.value}\n{self.warmth}\n{self.respect}"

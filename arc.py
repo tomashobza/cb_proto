@@ -5,6 +5,7 @@ from types import MappingProxyType
 from typing import Any, Callable
 
 from archetypes import ArchetypesEnum
+from org_chart import OrgRole, normalize_level, normalize_role
 from scenario import Scenario
 
 
@@ -17,10 +18,11 @@ COMPARISON_OPERATORS = {
   ">": operator.gt,
 }
 
-PLAYER_STATS = {
-  "reputation": "reputation",
-  "political_capital": "political_capital",
-  "stress": "stress",
+PLAYER_VALUES = {
+  "reputation": lambda player: player.reputation.get_value(),
+  "political_capital": lambda player: player.political_capital.get_value(),
+  "stress": lambda player: player.stress.get_value(),
+  "level": lambda player: player.level,
 }
 
 
@@ -28,30 +30,51 @@ PLAYER_STATS = {
 class PlayerCondition:
   stat: str
   comparison: str
-  value: float
+  value: float | int | OrgRole | str
 
   def __post_init__(self):
-    if self.stat not in PLAYER_STATS:
-      raise ValueError(f"Unknown player stat: {self.stat}")
+    if self.stat not in PLAYER_VALUES:
+      raise ValueError(f"Unknown player value: {self.stat}")
     if self.comparison not in COMPARISON_OPERATORS:
       raise ValueError(f"Unknown comparison operator: {self.comparison}")
+    if self.stat == "level":
+      object.__setattr__(self, "value", normalize_level(self.value))
 
   def matches(self, player) -> bool:
-    stat = getattr(player, PLAYER_STATS[self.stat]).get_value()
-    return COMPARISON_OPERATORS[self.comparison](stat, self.value)
+    value = PLAYER_VALUES[self.stat](player)
+    return COMPARISON_OPERATORS[self.comparison](value, self.value)
 
 
 @dataclass(frozen=True)
 class ActorQuery:
   archetypes: frozenset[ArchetypesEnum] | None = None
+  roles: frozenset[OrgRole] | None = None
+  role_level: tuple[int | OrgRole | str, int | OrgRole | str] | None = None
   warmth: tuple[float, float] | None = None
   respect: tuple[float, float] | None = None
 
   def __post_init__(self):
     if self.archetypes is not None:
       object.__setattr__(self, "archetypes", frozenset(self.archetypes))
+    if self.roles is not None:
+      object.__setattr__(
+        self,
+        "roles",
+        frozenset(normalize_role(role) for role in self.roles),
+      )
+    if self.role_level is not None:
+      object.__setattr__(
+        self,
+        "role_level",
+        tuple(self._normalize_level(value) for value in self.role_level),
+      )
     self._validate_range("warmth", self.warmth)
     self._validate_range("respect", self.respect)
+    self._validate_range("role_level", self.role_level)
+
+  @staticmethod
+  def _normalize_level(value):
+    return normalize_level(value)
 
   @staticmethod
   def _validate_range(name, value_range):
@@ -62,6 +85,10 @@ class ActorQuery:
 
   def matches(self, npc) -> bool:
     if self.archetypes is not None and npc.archetype not in self.archetypes:
+      return False
+    if self.roles is not None and npc.role not in self.roles:
+      return False
+    if not self._stat_matches(npc.level, self.role_level):
       return False
     if not self._stat_matches(npc.warmth.get_value(), self.warmth):
       return False

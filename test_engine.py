@@ -11,6 +11,7 @@ from arc import (
 from archetypes import ArchetypesEnum
 from decision import Decision
 from npc import NPC
+from org_chart import OrgRole
 from player import Player
 from scenario import Scenario
 from tags import TagEnum
@@ -59,6 +60,19 @@ class QueryTests(unittest.TestCase):
     self.assertFalse(PlayerCondition("reputation", "<", 0.5).matches(player))
     self.assertFalse(PlayerCondition("reputation", "!=", 0.5).matches(player))
 
+  def test_player_condition_can_require_org_level(self):
+    player = Player("Player")
+
+    self.assertTrue(PlayerCondition("level", "==", OrgRole.INTERN).matches(player))
+    self.assertTrue(PlayerCondition("level", "==", 0).matches(player))
+    self.assertTrue(PlayerCondition("level", "==", "intern").matches(player))
+    self.assertFalse(PlayerCondition("level", ">=", OrgRole.MANAGER).matches(player))
+
+    player.set_role(OrgRole.MANAGER)
+
+    self.assertTrue(PlayerCondition("level", ">=", OrgRole.MANAGER).matches(player))
+    self.assertTrue(PlayerCondition("level", ">=", 3).matches(player))
+
   def test_actor_query_filters_archetype_stats_and_locks(self):
     npc = NPC("Mentor", ArchetypesEnum.Mentor)
     npc.warmth.set_value(0.4)
@@ -73,12 +87,32 @@ class QueryTests(unittest.TestCase):
     npc.lock_for(object())
     self.assertFalse(query.matches(npc))
 
+  def test_actor_query_filters_org_roles_and_role_levels(self):
+    manager = NPC("Manager", ArchetypesEnum.Bureaucrat, role="manager")
+    associate = NPC("Associate", ArchetypesEnum.Mentor, role=OrgRole.ASSOCIATE)
+    manager_query = ActorQuery(
+      roles={OrgRole.MANAGER},
+      role_level=(OrgRole.MANAGER, OrgRole.DIRECTOR),
+    )
+
+    self.assertTrue(manager_query.matches(manager))
+    self.assertFalse(manager_query.matches(associate))
+
+
+class OrgChartTests(unittest.TestCase):
+  def test_player_starts_as_intern_and_promotes_through_progression(self):
+    player = Player("Player")
+
+    self.assertEqual(player.role, OrgRole.INTERN)
+    self.assertEqual(player.promote(), OrgRole.ASSOCIATE)
+    self.assertEqual(player.role, OrgRole.ASSOCIATE)
+
 
 class ArcTests(unittest.TestCase):
   def setUp(self):
     self.player = Player("Player")
-    self.mentor = NPC("Morgan", ArchetypesEnum.Mentor)
-    self.climber = NPC("Casey", ArchetypesEnum.LadderClimber)
+    self.mentor = NPC("Morgan", ArchetypesEnum.Mentor, role=OrgRole.MANAGER)
+    self.climber = NPC("Casey", ArchetypesEnum.LadderClimber, role=OrgRole.ASSOCIATE)
     self.setup = Scenario("Setup", actor_roles=("lead",))
     self.dilemma = Scenario(
       "Dilemma",
@@ -97,7 +131,10 @@ class ArcTests(unittest.TestCase):
       },
       "start_scenario_id": "setup",
       "actor_queries": {
-        "lead": ActorQuery(archetypes={ArchetypesEnum.Mentor}),
+        "lead": ActorQuery(
+          archetypes={ArchetypesEnum.Mentor},
+          role_level=(OrgRole.MANAGER, OrgRole.C_SUITE),
+        ),
       },
       "conditions": (PlayerCondition("stress", "<=", 0),),
       "transitions": {
