@@ -45,12 +45,11 @@ class Player():
   
   def affect_by_tags(self, tags: list[TagEnum]):
     affects = [self.affect_by_tag(tag) for tag in tags]
-    sum_reputation = sum(affect[0] for affect in affects)
-    sum_political_capital = sum(affect[1] for affect in affects)
-    sum_stress = sum(affect[2] for affect in affects)
-    
-    # print explaination of how player stats are affected
-    print(f"You are now {sum_reputation > 0 and 'more' or 'less'} reputable and have {sum_political_capital > 0 and 'more' or 'less'} political capital and are {sum_stress > 0 and 'more' or 'less'} stressed.")
+    return {
+      "reputation": sum(affect[0] for affect in affects),
+      "political_capital": sum(affect[1] for affect in affects),
+      "stress": sum(affect[2] for affect in affects),
+    }
   
   def affect_by_tag(self, tag: TagEnum):
     # affect NPC stats

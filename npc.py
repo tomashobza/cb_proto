@@ -32,11 +32,10 @@ class NPC():
   
   def affect_by_tags(self, tags: list[TagEnum]):
     affects = [self.affect_by_tag(tag) for tag in tags]
-    sum_warmth = sum(affect[0] for affect in affects)
-    sum_respect = sum(affect[1] for affect in affects)
-    
-    # print explaination of how player stats are affected
-    print(f"{self.name} now {sum_warmth > 0 and 'warmer' or 'colder'} towards you and has {sum_respect > 0 and 'more' or 'less'} respect for you.")
+    return {
+      "warmth": sum(affect[0] for affect in affects),
+      "respect": sum(affect[1] for affect in affects),
+    }
   
   def affect_by_tag(self, tag: TagEnum):
     # affect NPC stats
